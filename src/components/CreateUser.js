@@ -49,7 +49,7 @@ export default class CreateUser extends Component {
                             <div className="form-group">
                                 <input type="text" className="form-control" value={this.state.username } onChange={this.onChangeUsername}/>
                             </div>
-                            <button type="submint" className="btn btn-primary">
+                            <button type="submit" className="btn btn-primary">
                                 Guardar
                             </button>
                         </form>

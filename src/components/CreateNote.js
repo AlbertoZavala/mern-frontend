@@ -16,7 +16,8 @@ export default class CreateNote extends Component {
     componentDidMount = async () => {
         const res = await Axios.get('http://localhost:4000/api/users');
         this.setState({
-            users: res.data.map(user => user.username)
+            users: res.data.map(user => user.username),
+            userSelected: res.data[0].username
         });
     }
 
@@ -33,8 +34,18 @@ export default class CreateNote extends Component {
         });
     }
     
-    onSubmitNote = (e) => {        
+    onSubmitNote = async (e) => {                
         e.preventDefault();
+        
+        const newNote = {
+            title: this.state.title,
+            content: this.state.content,
+            date: this.state.date,
+            author: this.state.userSelected
+        }
+        
+        await Axios.post('http://localhost:4000/api/notes', newNote);      
+        window.location.href = "/";          
     }
 
     render() {
@@ -72,8 +83,6 @@ export default class CreateNote extends Component {
                     </div>
 
                     <form onSubmit={this.onSubmitNote}>                        
-
-
                         <button type="submit" className="btn btn-primary">
                             Guardar
                         </button>

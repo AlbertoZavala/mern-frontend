@@ -26,3 +26,8 @@ Description here...
 Description here... [link](https://reactdatepicker.com/)
 
     npm install react-datepicker
+
+#### Time Ago
+Description here... [link](https://github.com/hustcc/timeago.js?files=1)
+
+    npm install timeago.js
