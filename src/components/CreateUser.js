@@ -35,7 +35,7 @@ export default class CreateUser extends Component {
     }
 
     deleteUserOnDobuleClick = async (id) => {
-        const res = await Axios.delete('http://localhost:4000/api/users/' + id);
+        await Axios.delete('http://localhost:4000/api/users/' + id);
         this.getUsers();
     }
 
