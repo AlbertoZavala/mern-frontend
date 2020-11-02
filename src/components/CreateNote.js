@@ -10,7 +10,9 @@ export default class CreateNote extends Component {
         userSelected: '',
         title: '',
         content: '',
-        date: new Date()
+        date: new Date(),
+        editing: false,
+        _id: ''
     }
 
     componentDidMount = async () => {
@@ -19,8 +21,19 @@ export default class CreateNote extends Component {
             users: res.data.map(user => user.username),
             userSelected: res.data[0].username
         });
-    }
 
+        if(this.props.match.params.id){
+            const res = await Axios.get('http://localhost:4000/api/notes/' + this.props.match.params.id);
+            this.setState({
+                title: res.data.title,
+                content: res.data.content,
+                date: new Date(res.data.date),
+                userSelected: res.data.author,     
+                editing: true,
+                _id: this.props.match.params.id
+            });
+        }
+    }
     
     onInputChange = (e) => {        
         this.setState({
@@ -36,7 +49,7 @@ export default class CreateNote extends Component {
     
     onSubmitNote = async (e) => {                
         e.preventDefault();
-        
+
         const newNote = {
             title: this.state.title,
             content: this.state.content,
@@ -44,7 +57,12 @@ export default class CreateNote extends Component {
             author: this.state.userSelected
         }
         
-        await Axios.post('http://localhost:4000/api/notes', newNote);      
+        if(this.state.editing){
+            await Axios.put('http://localhost:4000/api/notes/' + this.state._id, newNote);      
+        }else{
+            await Axios.post('http://localhost:4000/api/notes', newNote);      
+        }
+
         window.location.href = "/";          
     }
 
@@ -56,7 +74,7 @@ export default class CreateNote extends Component {
 
                     { /* Select user */ }
                     <div className="form-group">
-                        <select className="form-control" name="userSelected" onChange={ this.onInputChange } >
+                        <select className="form-control" name="userSelected" onChange={ this.onInputChange } value={this.state.userSelected} >
                             {
                                 this.state.users.map(user => 
                                     <option key={user} value={user}>
@@ -68,18 +86,34 @@ export default class CreateNote extends Component {
                     </div>
 
                     <div className="form-group">
-                        <input type="text" className="form-control" placeholder="Título" name="title" onChange={ this.onInputChange } required>
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            placeholder="Título" 
+                            name="title" 
+                            onChange={ this.onInputChange } 
+                            value={this.state.title} 
+                            required>
                         </input>
                     </div>
 
                     <div className="form-group">
-                        <textarea name="content" className="form-control" placeholder="Contenido" onChange={ this.onInputChange } required>
-
+                        <textarea 
+                            name="content" 
+                            className="form-control" 
+                            placeholder="Contenido" 
+                            onChange={ this.onInputChange } 
+                            value={this.state.content}
+                            required>
                         </textarea>
                     </div>
 
                     <div className="form-group">
-                        <DatePicker className="form-control" selected={ this.state.date } onChange={this.onChangeDate} />
+                        <DatePicker 
+                            className="form-control" 
+                            selected={ this.state.date } 
+                            onChange={this.onChangeDate} 
+                            value={this.state.date}/>
                     </div>
 
                     <form onSubmit={this.onSubmitNote}>                        

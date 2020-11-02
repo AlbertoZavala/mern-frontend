@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Axios from 'axios';
 import { format as Format } from 'timeago.js';
+import {Link} from 'react-router-dom';
 
 export default class NotesList extends Component {
 
@@ -8,7 +9,7 @@ export default class NotesList extends Component {
         notes: []
     }
 
-    componentDidMount = () => {
+    componentDidMount = () => {        
         this.getNotes();
     }
 
@@ -31,8 +32,11 @@ export default class NotesList extends Component {
                     this.state.notes.map(note => (
                         <div className="col-md-4 p-2" key={ note._id }>
                             <div className="card">
-                                <div className="card-header">
+                                <div className="card-header d-flex justify-content-between">
                                     <h5>{ note.title }</h5>
+                                    <Link className="btn btn-secondary" to={"/edit/" + note._id}>
+                                        Editar
+                                    </Link>                                    
                                 </div>
                                 <div className="card-body">
                                     <p>{ note.content }</p>
